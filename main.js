@@ -6,7 +6,7 @@ firebase.initializeApp({
 
 let db = firebase.firestore();
 
-function saveUsers() {
+function createUsers() {
   db.collection("users").add({
     first: document.getElementById('firt-name').value,
     last: document.getElementById('last-name').value,
@@ -20,3 +20,19 @@ function saveUsers() {
       console.error("Error adding document: ", error);
     });
 }
+
+let table=document.getElementById('display');
+db.collection("users").onSnapshot((querySnapshot) => {
+  table.innerHTML='';
+  querySnapshot.forEach((doc) => {
+      console.log(`${doc.id} => ${doc.data().first}`);
+      table.innerHTML+=`
+      <tr>
+        <th scope="row">${doc.id}</th>
+        <td>${doc.data().first}</td>
+        <td>${doc.data().last}</td>
+        <td>${doc.data().born}</td>
+      </tr>
+      `
+  });
+});
